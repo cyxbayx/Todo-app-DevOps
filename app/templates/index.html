@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo App</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 2rem auto; }
+    input, button { padding: 0.5rem; font-size: 1rem; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; }
+    .done { text-decoration: line-through; color: #999; }
+  </style>
+</head>
+<body>
+  <h1>Todo</h1>
+  <form action="/api/todos" method="post">
+    <input name="title" placeholder="Tambah todo..." required />
+    <button type="submit">Tambah</button>
+  </form>
+  <ul>
+    {% for todo in todos %}
+    <li>
+      <input type="checkbox" {% if todo['done'] %}checked{% endif %}
+             onchange="fetch('/api/todos/{{ todo['id'] }}', {method:'PATCH'}).then(()=>location.reload())" />
+      <span class="{% if todo['done'] %}done{% endif %}">{{ todo['title'] }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
