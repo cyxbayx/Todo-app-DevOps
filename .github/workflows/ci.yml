@@ -85,11 +85,21 @@ jobs:
         with:
           context: .
           push: true
+          load: true
           tags: |
+            todo-app:latest
             ghcr.io/${{ env.IMAGE_NAME }}:latest
             ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Scan image for vulnerabilities
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: todo-app:latest
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
 
   # =====================================================================
   # JOB DEPLOY (Fase A - standby). Cara kerja:
