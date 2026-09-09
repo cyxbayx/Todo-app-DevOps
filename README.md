@@ -9,6 +9,8 @@ DevSecOps/
 ├── app/                 # Aplikasi Flask (app.py + template)
 ├── tests/               # Test pytest
 ├── .github/workflows/   # Pipeline CI/CD
+├── k8s/                 # Manifes Kubernetes (deployment + service)
+├── terraform/           # Infrastructure as Code (Docker provider)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
@@ -59,3 +61,39 @@ Data tersimpan di volume `todo-data` (file `/data/todo.db`), jadi tetap ada sete
 2. Image otomatis ter-push ke `ghcr.io/<user>/<repo>`.
 3. Uncomment job `deploy` di `.github/workflows/ci.yml`.
 4. Set secrets di GitHub: `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY`.
+
+## Kubernetes
+
+Deploy aplikasi ke cluster (minikube/K8s):
+
+```bash
+minikube start
+minikube image build -t todo-app:latest .
+minikube kubectl -- apply -f k8s/
+minikube kubectl -- get pods
+minikube service todo-web --url
+```
+
+Scaling & update:
+```bash
+minikube kubectl -- scale deployment todo-web --replicas=3
+minikube kubectl -- rollout restart deployment todo-web
+minikube kubectl -- rollout undo deployment todo-web
+```
+
+## Terraform (IaC)
+
+Provision container/network/volume dari kode (Docker provider):
+
+```bash
+cd terraform
+terraform init      # unduh provider
+terraform plan      # lihat rencana
+terraform apply     # bikin resource
+terraform destroy   # hapus semua
+
+# override variabel saat deploy
+terraform apply -var="container_count=4" -var="app_port=9000"
+```
+
+Variabel & output didefinisikan di `variables.tf` dan `main.tf`.

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-web
+  labels:
+    app: todo-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todo-web
+  template:
+    metadata:
+      labels:
+        app: todo-web
+    spec:
+      containers:
+        - name: web
+          image: todo-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_PATH
+              value: /data/todo.db
+          volumeMounts:
+            - name: todo-data
+              mountPath: /data
+      volumes:
+        - name: todo-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-web
+spec:
+  selector:
+    app: todo-web
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: NodePort
