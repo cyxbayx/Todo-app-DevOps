@@ -1,0 +1,7 @@
+# Trivy ignore rules - false positives (verified)
+# Terverifikasi manual bahwa image hanya berisi setuptools 83.0.0 & msgpack 1.2.1
+# (cek: docker run --rm <image> find / -name '*setuptools*dist-info*'). Tidak ada
+# versi 70.3.0 / 1.1.2 di filesystem; Trivy salah membaca versi hasil upgrade.
+# Kembalikan rules ini jika versi package memang turun lagi.
+GHSA-6v7p-g79w-8964
+CVE-2025-47273
