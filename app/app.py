@@ -32,7 +32,7 @@ def create_app(test_config=None):
 
     @app.get("/health")
     def health():
-        return jsonify(status="ok v2")
+        return jsonify(status="ok")
 
     @app.get("/api/todos")
     def list_todos():
