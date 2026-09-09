@@ -21,10 +21,12 @@ DevSecOps/
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -r requirements-dev.txt   # deps dev (test, bandit, pip-audit)
 PORT=5000 .venv/bin/python -m app.app
 # buka http://localhost:5000
 ```
+
+Note: `requirements.txt` berisi production deps saja (runtime). `requirements-dev.txt` berisi tools pengembangan (pytest, bandit, pip-audit) — di-install hanya saat development & CI.
 
 ## Menjalankan dengan Docker
 
