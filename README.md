@@ -99,3 +99,34 @@ terraform apply -var="container_count=4" -var="app_port=9000"
 ```
 
 Variabel & output didefinisikan di `variables.tf` dan `main.tf`.
+
+## Catatan Pengembangan (catatan sementara)
+
+> File ini jadi tempat mencatat progres & ide lanjutan. Update setiap kali ada perkembangan.
+
+### Status saat ini: SELESAI / HIJAU
+
+- [x] Flask app + SQLite (Todo)
+- [x] Test (pytest) & SAST (bandit)
+- [x] Docker containerization (prod vs dev deps dipisah)
+- [x] CI/CD GitHub Actions: `test` → `security` → `build`
+- [x] Docker security scan (Trivy) sebelum push ke GHCR
+- [x] Kubernetes deploy (deployment, service, scaling, rolling update)
+- [x] Terraform (IaC) dengan variabel, count, output, destroy
+- [x] Monitoring (metrics-server, dashboard, Prometheus/Grafana)
+- [x] False positive handling (.trivyignore dengan alasan tertulis)
+
+### Ide pengembangan berikutnya (TODO)
+
+- [ ] Aktifkan job `deploy` di ci.yml (set secrets: DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY)
+- [ ] Ganti provider Terraform ke AWS (EC2, VPC, IAM)
+- [ ] Deploy ke K8s dengan Helm chart
+- [ ] Tambah CI/CD cache yang benar (buildx optimized) + `.gitignore` ketat
+- [ ] Bikin monitoring alert (Grafana alerts / alertmanager)
+- [ ] Secret scanning via CodeQL & Dependabot
+- [ ] Update GitHub Actions ke versi terbaru (Node 24-aware)
+
+### Cara maintain
+
+- Update bagian checklist di atas saat ada fitur baru.
+- Catat keputusan penting & alasan (mis. kenapa pin versi tertentu) di file ini / `.trivyignore`.
