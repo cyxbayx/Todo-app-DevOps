@@ -62,14 +62,25 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Untuk deploy ke server, isi host/user/key di GitHub Secrets dan
-  # ubah SSH key agar sesuai. Aktifkan job ini setelah siap deploy.
+  # =====================================================================
+  # JOB DEPLOY (Fase A - standby). Cara kerja:
+  #   1. GitHub runner masuk ke server via SSH (pakai secret key).
+  #   2. Tarik image terbaru dari GHCR.  --> docker pull
+  #   3. Restart container dengan image baru. --> docker compose up -d
+  #
+  # Aktifkan di Fase B: hapus tanda '#' di setiap baris job deploy,
+  # lalu set 3 secrets ini di GitHub (Settings > Secrets and variables):
+  #   - DEPLOY_HOST           (IP/hostname server, misal 192.168.1.50)
+  #   - DEPLOY_USER           (user di server, misal deploy)
+  #   - DEPLOY_SSH_KEY        (private key SSH yang terdaftar di server)
+  # =====================================================================
   # deploy:
   #   name: Deploy
   #   runs-on: ubuntu-latest
   #   needs: build
   #   if: github.ref == 'refs/heads/main'
   #   steps:
+  #     # Step 1: login ke server + tarik image baru + restart
   #     - name: Deploy via SSH
   #       uses: appleboy/ssh-action@v1.0.3
   #       with:
@@ -77,5 +88,9 @@ jobs:
   #         username: ${{ secrets.DEPLOY_USER }}
   #         key: ${{ secrets.DEPLOY_SSH_KEY }}
   #         script: |
+  #           echo "=== Pulling latest image ==="
   #           docker pull ghcr.io/${{ env.IMAGE_NAME }}:latest
+  #           echo "=== Restarting app with new image ==="
+  #           cd /opt/todo-app
   #           docker compose pull && docker compose up -d
+  #           echo "=== Deploy done ==="
