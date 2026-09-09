@@ -87,7 +87,6 @@ jobs:
           push: true
           load: true
           tags: |
-            todo-app:latest
             ghcr.io/${{ env.IMAGE_NAME }}:latest
             ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=gha
@@ -96,7 +95,7 @@ jobs:
       - name: Scan image for vulnerabilities
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: todo-app:latest
+          image-ref: ghcr.io/${{ env.IMAGE_NAME }}:latest
           severity: HIGH,CRITICAL
           exit-code: '1'
           ignore-unfixed: true
