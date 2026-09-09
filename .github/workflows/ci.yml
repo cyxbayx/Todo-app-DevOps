@@ -80,23 +80,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build & load image locally
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          push: false
           load: true
-          tags: |
-            ghcr.io/${{ env.IMAGE_NAME }}:latest
-            ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: todo-app-scan:latest
 
       - name: Scan image for vulnerabilities
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ghcr.io/${{ env.IMAGE_NAME }}:latest
+          image-ref: todo-app-scan:latest
           severity: HIGH,CRITICAL
           exit-code: '1'
           ignore-unfixed: true
+
+      - name: Push image to GHCR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          load: false
+          tags: |
+            ghcr.io/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   # =====================================================================
   # JOB DEPLOY (Fase A - standby). Cara kerja:
